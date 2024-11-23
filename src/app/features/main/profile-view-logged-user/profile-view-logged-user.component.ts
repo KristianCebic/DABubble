@@ -67,8 +67,4 @@ export class ProfileViewLoggedUserComponent {
       }
     }
   }
-
-  changeName(): void {
-    console.log('hooi')
-  }
 }

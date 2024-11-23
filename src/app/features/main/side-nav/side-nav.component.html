@@ -67,11 +67,11 @@
       </div>
       <div *ngIf="channelsOpened" class="dFlexColumn gap25 slideIn_Out divWidth" style="align-items: flex-start;">
         <div class="divWidth dFlexColumn gap25 divWidth" style="overflow: auto; align-items: flex-start;">
-          @for (channel of chatService.channels(); track channel.name; let i = $index) {
-              <div [ngClass]="{'channelWasChosen': chatService.getSelectedChannelId() === channel.id}" class="channel-name-container dFlexRowFlex-StartCenter" (click)="chatService.openChannel(channel.id)">
-                <span id="tag" class="material-symbols-rounded cursor-pointer">tag</span>
-                <span>{{channel.name}}</span>
-              </div>
+          @for (channel of myChannels(); track channel.name; let i = $index) {
+            <div [ngClass]="{'channelWasChosen': chatService.getSelectedChannelId() === channel.id}" class="channel-name-container dFlexRowFlex-StartCenter" (click)="chatService.openChannel(channel.id)">
+              <span id="tag" class="material-symbols-rounded cursor-pointer">tag</span>
+              <span>{{channel.name}}</span>
+            </div>
             }
             
         </div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { SideNavService } from '../../../core/services/sideNav/side-nav.service';
 import { ChatService } from '../../../core/services/chat/chat.service';
 import { UserService } from '../../../core/services/user/user.service';
@@ -15,6 +15,7 @@ import { SearchComponentComponent } from "../search-component/search-component.c
 })
 export class SideNavComponent{
   channelsOpened: boolean = true;
+  myChannels = computed(() => this.chatService.channels().filter(channel => channel.userUIDs.includes(this.userService.currentOnlineUser().userUID)));
 
   constructor(
     public sideNavService: SideNavService,
