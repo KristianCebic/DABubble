@@ -81,12 +81,17 @@ export class ChatService {
   private channelsSignal = signal<Channel[]>([]);
   readonly channels = this.channelsSignal.asReadonly();
 
+  // private myChannelsSignal = signal<Channel[]>([]);
+  // readonly myChannels = this.myChannelsSignal.asReadonly();
+
   private directMessageChannelsSignal = signal<Channel[]>([]);
   readonly directMessageChannels =
     this.directMessageChannelsSignal.asReadonly();
 
   private chosenUserUIDsSignal = signal<string[]>([]);
   readonly chosenUserUIDs = this.chosenUserUIDsSignal.asReadonly();
+
+  
 
   topThreadMessageId: string = '';
 
@@ -111,6 +116,23 @@ export class ChatService {
     this.unsubChannels = this.subChannels();
     this.unsubDirectMessageChannels = this.subDirectMessageChannels();
     this.unsubThread = this.subThread();
+  }
+
+  // checkIfMyIdIsInChannels() {
+  //   const myUserID = this.userService.currentOnlineUser().userUID;
+  //   this.channels().forEach(channel => {
+  //     if (channel.userUIDs.includes(myUserID)) {
+  //       console.log('userUID gefunden in Channel:', channel);
+  //       this.myChannelsSignal.set([channel]);
+  //       console.log('Aktualisiertes myChannelsSignal:', this.myChannelsSignal());
+  //     }
+  //   });
+  // }
+
+  addNewUserToAllChannels(newUserUID: string): void {
+    this.channelsSignal().forEach(channel => {
+      channel.userUIDs.push(newUserUID);
+    })
   }
 
   ngOnDestroy() {
@@ -265,6 +287,8 @@ export class ChatService {
       this.firebaseService.getDocRef(this.currentChannel().id, 'channels'),
       { ...channelObj }
     );
+
+    console.log(channelObj);
   }
 
   async updateChatMessage(
@@ -500,10 +524,12 @@ export class ChatService {
   }
 
   leaveChannel() {
+    // this.checkIfMyIdIsInChannels()
     if (
       this.currentChannel().userUIDs &&
       this.currentChannel().userUIDs.length > 0
     ) {
+      console.log(this.currentChannel().userUIDs)
       const newuserUIDs = this.currentChannel().userUIDs.filter(
         (userUID) => userUID !== this.userService.currentOnlineUser().userUID
       );

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SideNavService } from '../../../core/services/sideNav/side-nav.service';
 import { ChatService } from '../../../core/services/chat/chat.service';
 import { UserService } from '../../../core/services/user/user.service';
@@ -13,7 +13,7 @@ import { SearchComponentComponent } from "../search-component/search-component.c
   templateUrl: './side-nav.component.html',
   styleUrl: './side-nav.component.scss',
 })
-export class SideNavComponent {
+export class SideNavComponent{
   channelsOpened: boolean = true;
 
   constructor(
@@ -25,7 +25,6 @@ export class SideNavComponent {
 
   openChannels(): void {
     this.channelsOpened = !this.channelsOpened;
-    console.log('ss')
   }
 
   openCreateChannels(): void {

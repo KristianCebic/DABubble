@@ -56,7 +56,6 @@ export class RegisterComponent {
     this.userService.newUser.name = this.registerData.name;
     this.userService.newUser.email = this.registerData.email;
     this.userService.newUser.password = this.registerData.password;
+
   }
-
-
 }

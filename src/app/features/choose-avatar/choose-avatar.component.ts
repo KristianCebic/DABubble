@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user/user.service';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { FirebaseService } from '../../core/services/firebase/firebase.service';
+import { ChatService } from '../../core/services/chat/chat.service';
 
 @Component({
   selector: 'app-choose-avatar',
@@ -39,7 +40,7 @@ export class ChooseAvatarComponent {
   ];
 
 
-  constructor(private location: Location, private router: Router) { }
+  constructor(private location: Location, private router: Router, private chatService: ChatService) { }
 
 
   goBack() {
@@ -109,6 +110,7 @@ export class ChooseAvatarComponent {
         this.userService.newUser.avatar = this.profileImgPath();
         this.userService.addUser(user.uid, this.userService.newUser.toJSON());
         this.goToLogin();
+        this.chatService.addNewUserToAllChannels(user.uid);
       })
       .catch((error) => {
         this.handleUploadError('else');
