@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, OnDestroy, Signal, signal } from '@angular/core';
-import { doc, onSnapshot, setDoc, Unsubscribe } from '@angular/fire/firestore';
+import { arrayUnion, doc, getDocs, onSnapshot, query, setDoc, Unsubscribe, updateDoc, where } from '@angular/fire/firestore';
 import { FirebaseService } from '../firebase/firebase.service';
 import { ChatUser } from '../../models/user.class';
 import { Auth, signOut, User, user, verifyBeforeUpdateEmail } from '@angular/fire/auth';
@@ -21,6 +21,7 @@ export class UserService implements OnDestroy {
   userSubscription!: Subscription;
   currentUserUIDSignal = signal<string>('0');
   readonly currentUserUID = this.currentUserUIDSignal.asReadonly();
+  initialChannelNames: string[] = ['Entwicklerteam', 'Angular'];
 
   readonly currentOnlineUser: Signal<ChatUser> = computed(() => {
     if (this.currentUserUID() && this.allUsers().length > 0) {
@@ -40,6 +41,7 @@ export class UserService implements OnDestroy {
       } else if (sessionStorage.getItem('guestIsOnline')) {
         this.updateUserDoc('guest', {isOnline: true});
         this.currentUserUIDSignal.set('0');
+        this.addInitialChannels();
       }
     });
   }
@@ -59,6 +61,7 @@ export class UserService implements OnDestroy {
     await setDoc(doc(this.firebaseService.getCollectionRef('users'), userUID), data)
     .catch(
       (err) => {console.error('User hinzufügen error:', err)});
+    this.addInitialChannels();
   }
 
 
@@ -102,10 +105,29 @@ export class UserService implements OnDestroy {
   }
 
 
+  async updateUserIdsInChannel(
+    channelId: string,
+  ) {
+    await updateDoc(
+      this.firebaseService.getDocRef(channelId, 'channels'), {
+      userUIDs: arrayUnion(this.currentUserUID())
+    });
+  }
+
+
+  addInitialChannels() {
+    this.initialChannelNames.forEach(async (channelName) => {
+      const q = query(this.firebaseService.getCollectionRef('channels'), where('name', '==', channelName));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(doc => this.updateUserIdsInChannel(doc.id));
+    });
+  }
+
+
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
     this.unsubUserCol();
   }
 
-
+  
 }

@@ -1,6 +1,6 @@
 <div class="overlayComponent fadeInFromOpacity0" (click)="onDiv1Click()">
   <section
-    *ngIf="!chatService.customProfile"
+    *ngIf="!isProfileBeingEdited"
     class="card dFlexColumn"
     (click)="onDiv2Click($event)"
   >
@@ -26,8 +26,8 @@
         <span class="nameCard">{{
           userService.currentOnlineUser().name
         }}</span>
-        <span *ngIf="userService.currentOnlineUser().userUID != '0'" class="edit" (click)="customProfile($event)">Bearbeiten</span>
-        <span *ngIf="userService.currentOnlineUser().userUID != '0'" (click)="customProfile($event)" class="material-symbols-rounded profil-edit-icon">edit</span>
+        <span *ngIf="userService.currentOnlineUser().userUID != '0'" class="edit" (click)="editProfile($event)">Bearbeiten</span>
+        <span *ngIf="userService.currentOnlineUser().userUID != '0'" (click)="editProfile($event)" class="material-symbols-rounded profil-edit-icon">edit</span>
       </div>
       <div class="gap15 dFlexRowCenterCenter">
         <img src="assets/img/main/Aktiv.png" />
@@ -50,7 +50,7 @@
   </section>
 
   <section
-    *ngIf="chatService.customProfile"
+    *ngIf="isProfileBeingEdited"
     class="card2 dFlexColumn"
     (click)="onDiv2Click($event)"
   >
@@ -63,11 +63,12 @@
     </div>
 
     <!-- avatar -->
-    <div class="dFlexRowCenterCenter">
+    <div class="dFlexRowCenterCenter column gap15">
       <img
         class="avatar avatar-200"
         [src]="userService.currentOnlineUser().avatar"
       />
+      <span class="edit">Profilbild ändern</span>
     </div>
 
     <form

@@ -55,6 +55,7 @@ export class ChooseAvatarComponent {
 
 
   uploadImg(input: HTMLInputElement) {
+    console.log('ss')
     this.uploadFile = 'inProgress';
     this.uploadError = false;
     this.uploadInfo = '';

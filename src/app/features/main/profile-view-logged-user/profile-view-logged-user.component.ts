@@ -15,6 +15,7 @@ import { collectionGroup, getDocs, onSnapshot, query, QuerySnapshot, updateDoc, 
 })
 export class ProfileViewLoggedUserComponent {
   
+  isProfileBeingEdited: boolean = false;
   inputFinished: boolean = false;
   data = {
     name: this.userService.currentOnlineUser().name,
@@ -29,30 +30,19 @@ export class ProfileViewLoggedUserComponent {
 
   onDiv1Click(): void {
     this.chatService.profileViewLoggedUser = false;
-    this.chatService.customProfile = false;
+    this.isProfileBeingEdited = false;
   }
 
   onDiv2Click(event: MouseEvent): void {
     event.stopPropagation();
   }
 
-  customProfile(event: MouseEvent) {
-    this.chatService.customProfile = true;
+  editProfile(event: MouseEvent) {
+    this.isProfileBeingEdited = true;
     this.onDiv2Click(event);
   }
 
-  async changeAllUserNamesFromCurrentUser(oldName: string, userUID: string, newName: string): Promise<void> {
-    const userNameRef = collectionGroup(this.fireBaseService.firestore, 'messages');
-    const querySnapshot = await getDocs(query(userNameRef));
-  
-    querySnapshot.forEach(async (doc) => {
-      if(doc.data()['userName'] == oldName && doc.data()['senderId'] == userUID) 
-      await updateDoc(doc.ref, { userName: newName });
-    });
-  }
-
   async saveNewContactInfos(ngForm: NgForm): Promise<void> {
-    this.changeAllUserNamesFromCurrentUser(this.userService.currentOnlineUser().name, this.userService.currentOnlineUser().userUID, ngForm.value.fullname);
     if (ngForm.submitted && ngForm.form.valid) {
       if (this.data.email == this.userService.currentOnlineUser().email) {
         await this.userService.updateUserDoc(this.userService.currentOnlineUser().userUID, this.data);
@@ -62,6 +52,7 @@ export class ProfileViewLoggedUserComponent {
         this.inputFinished = true;
         setTimeout(() => {
           this.inputFinished = false;
+          this.isProfileBeingEdited = false;
           this.chatService.profileViewLoggedUser = false;
         }, 1300);
       }

@@ -52,6 +52,14 @@ export class MessageComponent {
     this.isMe = this.messageData.senderId == this.userService.currentOnlineUser().userUID;
   }
 
+  returnUserName() {
+    return this.userService.allUsers().find(user => user.userUID === this.messageData.senderId)?.name;
+  }
+
+  returnImageName() {
+    return this.userService.allUsers().find(user => user.userUID === this.messageData.senderId)?.avatar;
+  }
+
   updateMessage() {
     if (this.isThreadMessage && !this.isTopMessage) {
       this.chatService.updateThreadReply(this.messageData.id, this.messageData.toJson());

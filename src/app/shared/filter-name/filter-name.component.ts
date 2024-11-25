@@ -70,7 +70,7 @@ export class FilterNameComponent {
       .allUsers()
       .filter((user) => user.name.toLowerCase().includes(input.value.toLowerCase()));
 
-    this.filteredUsers = filteredUsers.filter(user => !this.arrayOfChosenContacts.includes(user) && !this.isUserInCurrentChannel(user));
+    this.filteredUsers = filteredUsers.filter(user => !this.arrayOfChosenContacts.includes(user) && !this.isUserInCurrentChannel(user) && !(this.userService.currentOnlineUser().userUID === user.userUID));
   }
 
   deleteUserFromArrayOfChosenContacts(userUID: string) {

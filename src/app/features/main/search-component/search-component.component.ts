@@ -14,6 +14,7 @@ import {
   where,
 } from 'firebase/firestore';
 import { directMessage } from '../../../core/models/direct-message';
+import { thread } from '../../../core/models/thread.class';
 
 @Component({
   selector: 'app-search-component',
@@ -31,6 +32,7 @@ export class SearchComponentComponent {
   filteredResults: any[] = [];
   filteredChannels: any[] = [];
   messages: directMessage[] = [];
+  threads: directMessage[] = [];
   showDropDown: boolean = false;
   searchComponentInputControl = new FormControl('');
 
@@ -43,6 +45,7 @@ export class SearchComponentComponent {
     effect(() => {
       if (this.userService.allUsers().length > 0 || this.chatService.channels().length > 0) {
         this.getDirectMessages();
+        this.getThreads();
       }
     })
   }
@@ -78,11 +81,50 @@ export class SearchComponentComponent {
       message.message.toLowerCase().includes(query)
     );
 
+    const filteredThreads = this.threads.filter((thread) =>
+      thread.message.toLowerCase().includes(query)
+    );
+
     this.filteredResults = [
       ...filteredUsers,
       ...filteredChannels,
       ...filteredDirectMessages,
+      ...filteredThreads
     ];
+  }
+
+  async getThreads() {
+    const threadsRef = collectionGroup(
+      this.fireBaseService.firestore,
+      'thread'
+    );
+
+    const q = query(threadsRef, where('content', '!=', null));
+
+    onSnapshot(q, (querySnapshot) => {
+      querySnapshot.forEach(async (doc) => {
+        this.threads = [];
+        const docData = doc.data();
+
+        const threadsCollectionRef = doc.ref.parent;
+        const threadDocRef = threadsCollectionRef.parent;
+
+        if (threadDocRef) {
+          const threadDoc = await getDoc(
+            threadDocRef
+          );
+          const threadDocData = threadDoc.data();
+          const userIds: string[] = threadDocData!['userIds'];
+          const threadObject = new thread(
+            threadDoc.id,
+            userIds,
+            docData['content']
+          );
+
+          this.threads.push(threadObject);
+        }
+      });
+    });
   }
 
   async getDirectMessages() {

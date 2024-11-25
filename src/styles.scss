@@ -299,6 +299,10 @@ hr {
   @include dFlex($fd: row, $jc: flex-end, $ai: center);
 }
 
+.column {
+  flex-direction: column;
+}
+
 .sectionHidden {
   transform: translateX(-200%);
 }

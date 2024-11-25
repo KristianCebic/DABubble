@@ -91,6 +91,7 @@ export class CreateChannelComponent {
         userUIDs: this.userUIDs,
       }
     );
+    this.chatService.openChannel(this.channelId);
 
     const addPeopleDiv: HTMLElement = document.getElementById(
       'addPeople'
@@ -124,6 +125,7 @@ export class CreateChannelComponent {
     this.userUIDs = [];
     this.chatService.chosenUserUIDs().forEach((userUID) => {
       this.userUIDs.push(userUID);
+      this.userUIDs.push(this.userService.currentOnlineUser().userUID);
     });
   }
 
