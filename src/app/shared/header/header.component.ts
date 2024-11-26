@@ -42,7 +42,7 @@ export class HeaderComponent {
 
   async logout() {
     await this.userService.signOutUser();
-    this.router.navigateByUrl('');
+    this.router.navigateByUrl('').then(() => window.location.reload());
   }
 
 

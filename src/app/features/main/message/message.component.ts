@@ -42,6 +42,22 @@ export class MessageComponent {
   @ViewChild('messageContainer') messageContainer!: ElementRef;
   @Output() messageSelectionEvent = new EventEmitter<string>;
 
+  sendMessages() {
+    if(this.messageData && this.chatService.messageData) {
+      this.chatService.messageData = this.messageData;
+      console.log('this.chatService.messageData', this.chatService.messageData)
+    } else {
+      console.log('error')
+    }
+  }
+
+  userName() {
+    return this.userService.allUsersMap().get(this.messageData.senderId)?.name;
+  }
+  userAvatar() {
+    return this.userService.allUsersMap().get(this.messageData.senderId)?.avatar;
+  }
+
   constructor(private chatService: ChatService, public userService: UserService, private layoutService: LayoutService, private firebaseService: FirebaseService, private dialogService: DialogService, private el: ElementRef) {}
 
   ngOnInit() {
@@ -50,14 +66,6 @@ export class MessageComponent {
 
   ngOnChanges() {
     this.isMe = this.messageData.senderId == this.userService.currentOnlineUser().userUID;
-  }
-
-  returnUserName() {
-    return this.userService.allUsers().find(user => user.userUID === this.messageData.senderId)?.name;
-  }
-
-  returnImageName() {
-    return this.userService.allUsers().find(user => user.userUID === this.messageData.senderId)?.avatar;
   }
 
   updateMessage() {

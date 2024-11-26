@@ -22,10 +22,12 @@ export class UserService implements OnDestroy {
   currentUserUIDSignal = signal<string>('0');
   readonly currentUserUID = this.currentUserUIDSignal.asReadonly();
   initialChannelNames: string[] = ['Entwicklerteam', 'Angular'];
+  readonly allUsersMap = computed(() => new Map(this.allUsers().map(user => [user.userUID, user])));
 
   readonly currentOnlineUser: Signal<ChatUser> = computed(() => {
-    if (this.currentUserUID() && this.allUsers().length > 0) {
-      return this.allUsers()[this.getUserIndexWithUID(this.currentUserUID())];
+    const currentUser = this.allUsersMap().get(this.currentUserUID());
+    if (currentUser) {
+      return currentUser;
     } else {
       return new ChatUser();
     }
@@ -83,11 +85,6 @@ export class UserService implements OnDestroy {
       .catch((error) => {
         console.log('Update User Error:', error);
       })
-  }
-
-
-  getUserIndexWithUID(userUID: string) {
-    return this.allUsers().findIndex(singleUser => singleUser.userUID == userUID);
   }
 
 

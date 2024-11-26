@@ -63,12 +63,16 @@
     </div>
 
     <!-- avatar -->
-    <div class="dFlexRowCenterCenter column gap15">
-      <img
-        class="avatar avatar-200"
-        [src]="userService.currentOnlineUser().avatar"
-      />
-      <span class="edit">Profilbild ändern</span>
+    <div class="dFlexColumn avatar-container">
+      <label [ariaDisabled]="uploadFile == 'inProgress'" class="change-profile-img" for="new_img">
+        <img class="avatar avatar-200" #profileImg [src]="userService.currentOnlineUser().avatar"/>
+      </label>
+      <input (change)="changeProfileImg(newImg)" #newImg [disabled]="uploadFile == 'inProgress'" style="display: none;" id="new_img" type="file" accept="image/png, image/jpeg, image/svg+xml, image/webp">
+    
+      <div [ngStyle]="{'opacity': uploadFile != null ? '1' : '0'}" class="upload-info-container">
+        <span [ngClass]="{'upload-error': uploadError}">{{uploadInfo}}</span>
+        <span [ngStyle]="{'visibility': uploadError ? 'hidden' : 'visible'}">{{fireBaseService.uploadProgress()}}%</span>
+      </div>
     </div>
 
     <form

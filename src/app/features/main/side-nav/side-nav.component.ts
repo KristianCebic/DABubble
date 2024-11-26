@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, Signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { SideNavService } from '../../../core/services/sideNav/side-nav.service';
 import { ChatService } from '../../../core/services/chat/chat.service';
 import { UserService } from '../../../core/services/user/user.service';
 import { LayoutService } from '../../../core/services/layout/layout.service';
 import { SearchComponentComponent } from "../search-component/search-component.component";
-import { Channel } from '../../../core/models/channel.class';
 
 @Component({
   selector: 'app-side-nav',
@@ -16,7 +15,6 @@ import { Channel } from '../../../core/models/channel.class';
 })
 export class SideNavComponent{
   channelsOpened: boolean = true;
-  myChannels: Signal<Channel[]> = this.chatService.myChannels;
 
   constructor(
     public sideNavService: SideNavService,

@@ -27,6 +27,7 @@ import { ChatUser } from '../../models/user.class';
 import { EmptyMessageFile } from '../../models/empty-message-file.interface';
 import { LayoutService } from '../layout/layout.service';
 import { EventService } from '../event/event.service';
+import { thread } from '../../models/thread.class';
 
 @Injectable({
   providedIn: 'root',
@@ -90,8 +91,6 @@ export class ChatService {
   private chosenUserUIDsSignal = signal<string[]>([]);
   readonly chosenUserUIDs = this.chosenUserUIDsSignal.asReadonly();
 
-  
-
   topThreadMessageId: string = '';
 
   profileViewLoggedUser: boolean = false;
@@ -100,6 +99,7 @@ export class ChatService {
   contacts: any = [];
   channelID: string = '';
   private selectedChannelId: string | null = null;
+  messageData: any;
 
   private currentMainChatCollectionSignal = computed(() =>
     this.layoutService.selectedCollection()
@@ -115,17 +115,6 @@ export class ChatService {
     this.unsubDirectMessageChannels = this.subDirectMessageChannels();
     this.unsubThread = this.subThread();
   }
-
-  // checkIfMyIdIsInChannels() {
-  //   const myUserID = this.userService.currentOnlineUser().userUID;
-  //   this.channels().forEach(channel => {
-  //     if (channel.userUIDs.includes(myUserID)) {
-  //       console.log('userUID gefunden in Channel:', channel);
-  //       this.myChannelsSignal.set([channel]);
-  //       console.log('Aktualisiertes myChannelsSignal:', this.myChannelsSignal());
-  //     }
-  //   });
-  // }
 
   addNewUserToAllChannels(newUserUID: string): void {
     this.channelsSignal().forEach(channel => {
@@ -285,8 +274,6 @@ export class ChatService {
       this.firebaseService.getDocRef(this.currentChannel().id, 'channels'),
       { ...channelObj }
     );
-
-    console.log(channelObj);
   }
 
   async updateChatMessage(
@@ -525,12 +512,10 @@ export class ChatService {
   }
 
   leaveChannel() {
-    // this.checkIfMyIdIsInChannels()
     if (
       this.currentChannel().userUIDs &&
       this.currentChannel().userUIDs.length > 0
     ) {
-      console.log(this.currentChannel().userUIDs)
       const newuserUIDs = this.currentChannel().userUIDs.filter(
         (userUID) => userUID !== this.userService.currentOnlineUser().userUID
       );
@@ -621,9 +606,20 @@ export class ChatService {
     return message.toJson();
   }
 
-  openChatOrChannel(result: any) {
+  openThread() {
+    console.log('openThread aufgerufen')
+    if(this.messageData) {
+      console.log('this.messageData: ', this.messageData)
+      this.layoutService.selectThread(true);
+      this.changeThread(this.messageData);
+    }
+  }
+
+  openChatOrChannelOrThread(result: any) {
     if(result.id.length > 28) {
       this.openChat(result.userIds);
+    } else if(result instanceof thread) {
+      this.openThread();
     } else {
       this.openChannel(result.id);
     }

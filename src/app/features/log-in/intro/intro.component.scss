@@ -142,7 +142,7 @@ $animation-config: 500ms ease-out 2000ms forwards; //700ms Pause (Verzögerung: 
     }
 }
 
-@media(max-width: 1920px) and (max-height: 1100px) { //nur für Bildschirmbreite < 1920px und -höhe <= 1100px!
+@media(max-width: 1920px) and (min-height: 860px) and (max-height: 1100px) { //nur für Bildschirmbreite < 1920px und -höhe 860px - 1100px!
     @keyframes moveTopLeft {
         from {
             transform: translateY(0) translateX(0);
@@ -155,7 +155,20 @@ $animation-config: 500ms ease-out 2000ms forwards; //700ms Pause (Verzögerung: 
     }
 }
 
-// Mobile:
+@media(max-width: 1920px) and (max-height: 860px) { //nur für Bildschirmbreite < 1920px und -höhe < 860px!
+    @keyframes moveTopLeft {
+        from {
+            transform: translateY(0) translateX(0);
+        }
+    
+        to {
+            transform: translateY(calc(-50vh + $header-height / 2)) translateX(calc(-50vw + $intro-content-width / 2 + 24px));
+            transform: translateY(calc(-50svh + $header-height / 2)) translateX(calc(-50vw + $intro-content-width / 2 + 24px));
+        }
+    }
+}
+
+// Responsive Design:
 @keyframes shrinkLogoMobile {
     from {
         height: 70px;
@@ -190,29 +203,57 @@ $animation-config: 500ms ease-out 2000ms forwards; //700ms Pause (Verzögerung: 
     }
 }
 
-@media(min-width: 450px) and (max-width: 654px) {   //für Bildschirmbreite 450px - 654px
+@media(min-width: 450px) and (max-width: 654px) and (min-height: 848px) {   //für Bildschirmbreite 450px - 654px und -höhe > 848px
     @keyframes moveTopMobile {    //für den intro-content-Container
         from {
             transform: translateY(0) translateX(0);
         }
     
         to {
-            transform: translateY(calc(-50vh + (100vh - 784px) / 2 + 40px));
-            transform: translateY(calc(-50svh + (100svh - 784px) / 2 + 40px));
+            transform: translateY(calc(-50vh + (100vh - 848px) / 2 + 40px));
+            transform: translateY(calc(-50svh + (100svh - 848px) / 2 + 40px));
             //-50vh + (100vh - Content)/2 + halbe Header-Höhe
         }
     }
 }
 
-@media(max-width: 450px) {   //für Bildschirmbreite < 450px
+@media(min-width: 450px) and (max-width: 654px) and (max-height: 848px) {   //für Bildschirmbreite 450px - 654px und -höhe < 848px
     @keyframes moveTopMobile {    //für den intro-content-Container
         from {
             transform: translateY(0) translateX(0);
         }
     
         to {
-            transform: translateY(calc(-50vh + (100vh - 813px) / 2 + 40px));
-            transform: translateY(calc(-50svh + (100svh - 813px) / 2 + 40px));
+            transform: translateY(calc(-50vh + 40px));
+            transform: translateY(calc(-50svh + 40px));
+            //-50vh + (100vh - Content)/2 + halbe Header-Höhe
+        }
+    }
+}
+
+@media(max-width: 450px) and (min-height: 877px) {   //für Bildschirmbreite < 450px und -höhe > 877px
+    @keyframes moveTopMobile {    //für den intro-content-Container
+        from {
+            transform: translateY(0) translateX(0);
+        }
+    
+        to {
+            transform: translateY(calc(-50vh + (100vh - 877px) / 2 + 40px));
+            transform: translateY(calc(-50svh + (100svh - 877px) / 2 + 40px));
+            //-50vh + (100vh - Content)/2 + halbe Header-Höhe
+        }
+    }
+}
+
+@media(max-width: 450px) and (max-height: 877px) {   //für Bildschirmbreite < 450px und -höhe < 877px
+    @keyframes moveTopMobile {    //für den intro-content-Container
+        from {
+            transform: translateY(0) translateX(0);
+        }
+    
+        to {
+            transform: translateY(calc(-50vh + 40px));
+            transform: translateY(calc(-50svh + 40px));
             //-50vh + (100vh - Content)/2 + halbe Header-Höhe
         }
     }
