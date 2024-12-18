@@ -15,11 +15,11 @@
             }
         </div>
 
-        <div class="upload-img-container">
+        <!-- <div class="upload-img-container">
             <p>eigenes Bild verwenden</p>
             <label [ariaDisabled]="uploadFile == 'inProgress'" class="btn btn-sec" for="file_upload">Datei hochladen</label>
             <input (change)="uploadImg(upload)" #upload [disabled]="uploadFile == 'inProgress'" style="display: none;" id="file_upload" type="file" accept="image/png, image/jpeg, image/svg+xml, image/webp">
-        </div>
+        </div> -->
 
         <div [ngStyle]="{'opacity': uploadFile != null ? '1' : '0'}" class="upload-info-container">
             <span [ngClass]="{'upload-error': uploadError}">{{uploadInfo}}</span>
